@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
-import { GenerationWorkspace } from "./features/generation/GenerationWorkspace";
-import { ListWorkspace } from "./features/list/ListWorkspace";
 import { CanvasWorkspace } from "./features/canvas/CanvasWorkspace";
-import { StudioWorkspace } from "./features/studio/StudioWorkspace";
+import { DropWorkspace } from "./features/drop/DropWorkspace";
+import { CanonWorkspace } from "./features/canon/CanonWorkspace";
+import { OutputsWorkspace } from "./features/outputs/OutputsWorkspace";
 import "./styles.css";
 
 function App() {
@@ -18,21 +18,22 @@ function App() {
             </span>
             <span>Loredrop</span>
           </div>
-          <p className="brand-tagline">A living atlas for imagined worlds.</p>
+          <p className="brand-tagline">your group chat,<br/>but make it canon ✦</p>
           <nav aria-label="Main navigation">
-            <NavLink to="/list"><span aria-hidden="true">◫</span> Lore</NavLink>
-            <NavLink to="/canvas"><span aria-hidden="true">⌘</span> Canvas</NavLink>
-            <NavLink to="/generate"><span aria-hidden="true">✦</span> Generate</NavLink>
-            <NavLink to="/studio"><span aria-hidden="true">✎</span> Studio</NavLink>
+            <NavLink to="/drop"><span aria-hidden="true">↘</span> Drop</NavLink>
+            <NavLink to="/canon"><span aria-hidden="true">✓</span> Canon</NavLink>
+            <NavLink to="/outputs"><span aria-hidden="true">✦</span> Make stuff</NavLink>
+            <NavLink to="/web"><span aria-hidden="true">⌘</span> The web</NavLink>
           </nav>
         </aside>
         <main>
           <Routes>
-            <Route path="/" element={<Navigate to="/list" replace />} />
-            <Route path="/list" element={<ListWorkspace />} />
-            <Route path="/canvas" element={<CanvasWorkspace />} />
-            <Route path="/studio" element={<StudioWorkspace />} />
-            <Route path="/generate" element={<GenerationWorkspace />} />
+            <Route path="/" element={<Navigate to="/drop" replace />} />
+            <Route path="/drop" element={<DropWorkspace />} />
+            <Route path="/canon" element={<CanonWorkspace />} />
+            <Route path="/outputs" element={<OutputsWorkspace />} />
+            <Route path="/web" element={<CanvasWorkspace />} />
+            <Route path="*" element={<Navigate to="/drop" replace />} />
           </Routes>
         </main>
       </div>

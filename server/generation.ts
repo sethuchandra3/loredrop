@@ -29,6 +29,32 @@ export async function handleGeneration(request: IncomingMessage, response: Serve
   }
 }
 
+export async function handleVoice(request: IncomingMessage, response: ServerResponse) {
+  if (!process.env.OPENAI_API_KEY) {
+    response.statusCode = 204;
+    response.end();
+    return;
+  }
+  try {
+    const body = await readJson(request) as { text?: unknown; voice?: unknown };
+    const voices = ["alloy", "nova", "onyx"];
+    if (typeof body.text !== "string" || !body.text.trim() || body.text.length > 4_000) throw new HttpError(400, "Narration must be under 4,000 characters.");
+    const voice = voices.includes(String(body.voice)) ? String(body.voice) : "nova";
+    const apiResponse = await fetch("https://api.openai.com/v1/audio/speech", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: process.env.OPENAI_VOICE_MODEL || "tts-1", voice, input: body.text, response_format: "mp3" }),
+    });
+    if (!apiResponse.ok) throw new HttpError(apiResponse.status, "The voice booth is warming up. Try again in a moment.");
+    response.statusCode = 200;
+    response.setHeader("Content-Type", "audio/mpeg");
+    response.end(Buffer.from(await apiResponse.arrayBuffer()));
+  } catch (error) {
+    const status = error instanceof HttpError ? error.status : 500;
+    sendJson(response, status, { error: { code: "voice_failed", message: error instanceof Error ? error.message : "Voice generation failed.", retryable: status >= 500 } });
+  }
+}
+
 class HttpError extends Error {
   constructor(readonly status: number, message: string) {
     super(message);
@@ -115,4 +141,3 @@ function sendJson(response: ServerResponse, status: number, body: unknown) {
   response.setHeader("Content-Type", "application/json; charset=utf-8");
   response.end(JSON.stringify(body));
 }
-
