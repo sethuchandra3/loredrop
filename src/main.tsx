@@ -1,38 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
-import { GenerationWorkspace } from "./features/generation/GenerationWorkspace";
+import { CanvasWorkspace } from "./features/canvas/CanvasWorkspace";
+import { DropWorkspace } from "./features/drop/DropWorkspace";
+import { CanonWorkspace } from "./features/canon/CanonWorkspace";
+import { OutputsWorkspace } from "./features/outputs/OutputsWorkspace";
 import "./styles.css";
-
-function ListRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">List</p>
-      <h1>List workspace</h1>
-      <p>Track lore drops, saved ideas, and lightweight reference notes.</p>
-    </section>
-  );
-}
-
-function CanvasRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">Canvas</p>
-      <h1>Canvas workspace</h1>
-      <p>Map relationships, scenes, and concepts in a visual planning surface.</p>
-    </section>
-  );
-}
-
-function StudioRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">Studio</p>
-      <h1>Studio workspace</h1>
-      <p>Shape drafts, polish details, and prepare finished material.</p>
-    </section>
-  );
-}
 
 function App() {
   return (
@@ -45,20 +18,22 @@ function App() {
             </span>
             <span>Loredrop</span>
           </div>
+          <p className="brand-tagline">your group chat,<br/>but make it canon ✦</p>
           <nav aria-label="Main navigation">
-            <NavLink to="/list">List</NavLink>
-            <NavLink to="/canvas">Canvas</NavLink>
-            <NavLink to="/studio">Studio</NavLink>
-            <NavLink to="/generate">Generate</NavLink>
+            <NavLink to="/drop"><span aria-hidden="true">↘</span> Drop</NavLink>
+            <NavLink to="/canon"><span aria-hidden="true">✓</span> Canon</NavLink>
+            <NavLink to="/outputs"><span aria-hidden="true">✦</span> Make stuff</NavLink>
+            <NavLink to="/web"><span aria-hidden="true">⌘</span> The web</NavLink>
           </nav>
         </aside>
         <main>
           <Routes>
-            <Route path="/" element={<Navigate to="/list" replace />} />
-            <Route path="/list" element={<ListRoute />} />
-            <Route path="/canvas" element={<CanvasRoute />} />
-            <Route path="/studio" element={<StudioRoute />} />
-            <Route path="/generate" element={<GenerationWorkspace />} />
+            <Route path="/" element={<Navigate to="/drop" replace />} />
+            <Route path="/drop" element={<DropWorkspace />} />
+            <Route path="/canon" element={<CanonWorkspace />} />
+            <Route path="/outputs" element={<OutputsWorkspace />} />
+            <Route path="/web" element={<CanvasWorkspace />} />
+            <Route path="*" element={<Navigate to="/drop" replace />} />
           </Routes>
         </main>
       </div>
