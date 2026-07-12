@@ -1,11 +1,12 @@
 import { useSyncExternalStore } from "react";
+import type { StoredAsset } from "./assets";
 
 export type DropKind = "text" | "photo" | "voice";
-export interface Drop { id: string; kind: DropKind; content: string; createdAt: string; status: "extracted" | "processing"; mediaUrl?: string; }
+export interface Drop { id: string; kind: DropKind; content: string; createdAt: string; status: "extracted" | "processing"; mediaUrl?: string; assetId?: string; }
 export interface Person { id: string; name: string; emoji: string; color: string; role: string; }
 export interface CanonEvent { id: string; title: string; date: string; place: string; mood: string; quote: string; participantIds: string[]; dropIds: string[]; disputed?: boolean; }
 export interface Connection { id: string; sourceId: string; targetId: string; label: string; weight: number; }
-interface State { drops: Drop[]; people: Person[]; events: CanonEvent[]; connections: Connection[]; bits: string[]; }
+interface State { drops: Drop[]; people: Person[]; events: CanonEvent[]; connections: Connection[]; bits: string[]; assets: StoredAsset[]; }
 
 const KEY = "loredrop:friend-canon:v4";
 const people: Person[] = [
@@ -21,6 +22,7 @@ const initial: State = {
   events: [],
   connections: [],
   bits: [],
+  assets: [],
 };
 
 const demoState: State = {
@@ -40,6 +42,7 @@ const demoState: State = {
     { id: "demo-c2", sourceId: "jordan", targetId: "stuti", label: "bad idea feedback loop", weight: 9 },
   ],
   bits: ["we don’t talk about the kayak", "legally this is slander", "one more place"],
+  assets: [],
 };
 
 let state = load();
@@ -49,16 +52,17 @@ function save(next: State) { state = next; localStorage.setItem(KEY, JSON.string
 export function useCanon() { return useSyncExternalStore((listener) => { listeners.add(listener); return () => listeners.delete(listener); }, () => state); }
 
 export const canonStore = {
-  addDrop(kind: DropKind, content: string, mediaUrl?: string, details?: { title?: string; place?: string }) {
+  addDrop(kind: DropKind, content: string, mediaUrl?: string, details?: { title?: string; place?: string }, asset?: StoredAsset) {
     const id = crypto.randomUUID();
-    const drop: Drop = { id, kind, content: content.trim(), createdAt: new Date().toISOString(), status: "extracted", mediaUrl };
+    const drop: Drop = { id, kind, content: content.trim(), createdAt: new Date().toISOString(), status: "extracted", mediaUrl, assetId: asset?.id };
+    const assets = asset ? [asset, ...state.assets] : state.assets;
     if (kind !== "text" && state.events[0]) {
       const [current, ...rest] = state.events;
-      save({ ...state, drops: [drop, ...state.drops], events: [{ ...current, dropIds: [id, ...current.dropIds] }, ...rest] });
+      save({ ...state, assets, drops: [drop, ...state.drops], events: [{ ...current, dropIds: [id, ...current.dropIds] }, ...rest] });
       return;
     }
     const event: CanonEvent = { id: crypto.randomUUID(), title: details?.title?.trim() || guessTitle(content), date: "Just now", place: details?.place?.trim() || "Shared in the group chat", mood: "freshly added to the record", quote: extractQuote(content), participantIds: detectPeople(content), dropIds: [id] };
-    save({ ...state, drops: [drop, ...state.drops], events: [event, ...state.events] });
+    save({ ...state, assets, drops: [drop, ...state.drops], events: [event, ...state.events] });
   },
   renamePerson(id: string, name: string) { save({ ...state, people: state.people.map((person) => person.id === id ? { ...person, name: name.trim() || person.name } : person) }); },
   toggleDisputed(id: string) { save({ ...state, events: state.events.map((event) => event.id === id ? { ...event, disputed: !event.disputed } : event) }); },
