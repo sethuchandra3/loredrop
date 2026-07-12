@@ -29,10 +29,10 @@ export function DropWorkspace() {
     finishDrop();
   }
 
-  function filesSelected(event: ChangeEvent<HTMLInputElement>) {
-    const names = [...(event.target.files ?? [])].map((file) => file.name);
-    names.forEach((name) => canonStore.addDrop("photo", `Uploaded photo: ${name}`));
-    if (names.length) finishDrop();
+  async function filesSelected(event: ChangeEvent<HTMLInputElement>) {
+    const files = [...(event.target.files ?? [])];
+    await Promise.all(files.map(async (file) => canonStore.addDrop("photo", file.name, await readFile(file))));
+    if (files.length) finishDrop();
   }
 
   async function startRecording() {
@@ -76,7 +76,7 @@ export function DropWorkspace() {
 
       <header className="drop-question">
         <span className="doodle">LOREDROP</span>
-        <h1>What’s the lore?</h1>
+        <h1>Drop the lore.</h1>
       </header>
 
       <button
@@ -99,16 +99,16 @@ export function DropWorkspace() {
 
             {!kind && (
               <div className="drop-methods">
-                <button onClick={() => setKind("text")} type="button"><b>Text</b><span>Paste a chat or type what happened.</span></button>
-                <button onClick={() => { setKind("photo"); fileRef.current?.click(); }} type="button"><b>Photos</b><span>Add screenshots or camera-roll evidence.</span></button>
-                <button onClick={() => { setKind("voice"); void startRecording(); }} type="button"><b>Voice</b><span>Record the version you remember.</span></button>
+                <button onClick={() => setKind("text")} type="button"><b>💬 Text Receipt</b><span>Paste a chat or type what happened.</span></button>
+                <button onClick={() => { setKind("photo"); fileRef.current?.click(); }} type="button"><b>📸 Evidence</b><span>Add screenshots or camera-roll evidence.</span></button>
+                <button onClick={() => { setKind("voice"); void startRecording(); }} type="button"><b>🎙 Witness Statement</b><span>Record the version you remember.</span></button>
               </div>
             )}
 
             {(kind === "text" || (kind === "voice" && !recording)) && (
               <form onSubmit={submit}>
                 <label htmlFor="lore-text">{kind === "voice" ? "Voice transcription fallback" : "What happened?"}</label>
-                <textarea autoFocus id="lore-text" onChange={(event) => setText(event.target.value)} placeholder="Paste the group chat evidence here…" rows={7} value={text}/>
+                <textarea autoFocus id="lore-text" onChange={(event) => setText(event.target.value)} rows={7} value={text}/>
                 <div className="composer-actions"><button onClick={() => setKind(null)} type="button">Back</button><button className="submit-drop" type="submit">Add to tea</button></div>
               </form>
             )}
@@ -125,4 +125,13 @@ export function DropWorkspace() {
 
     </section>
   );
+}
+
+function readFile(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
 }
