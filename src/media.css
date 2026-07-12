@@ -1,0 +1,7 @@
+.evidence-photo video {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  background: #17171a;
+}

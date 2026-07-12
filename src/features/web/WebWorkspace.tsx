@@ -14,7 +14,7 @@ export function WebWorkspace() {
     drops.slice(0, 6).forEach((drop, index) => {
       const x = 80 + (index % 3) * 340;
       const y = 80 + Math.floor(index / 3) * 290;
-      if (drop.kind === "photo" && drop.mediaUrl) {
+      if (drop.kind === "photo" && drop.mediaUrl && !drop.mediaUrl.startsWith("data:video/")) {
         const assetId = AssetRecordType.createId(`drop-${drop.id}`);
         editor.createAssets([{ id: assetId, typeName: "asset", type: "image", props: { name: drop.content, src: drop.mediaUrl, w: 600, h: 420, mimeType: "image/png", isAnimated: false }, meta: {} }]);
         shapes.push({ id: createShapeId(`drop-${drop.id}`), type: "image", x, y, props: { assetId, w: 300, h: 210 } });

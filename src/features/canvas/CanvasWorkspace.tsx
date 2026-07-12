@@ -1,15 +1,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { canonStore, useCanon, type Drop } from "../../data/store";
 
-codex/ai-generation
-const kindLabel: Record<Drop["kind"], string> = {
-  text: "Text drop",
-  photo: "Photo/video file",
-  voice: "Voice note",
-};
-
 const labels: Record<Drop["kind"], string> = { text: "Text receipts", photo: "Photo/video receipts", voice: "Voice receipts" };
-main
 
 export function CanvasWorkspace() {
   const { drops, events } = useCanon();
@@ -56,6 +48,6 @@ export function CanvasWorkspace() {
   </section>;
 }
 
-function Evidence({drop}:{drop:Drop}) { if(drop.kind==="photo" && drop.mediaUrl) return <article className="evidence-photo"><img alt={drop.content} src={drop.mediaUrl}/><b>{drop.content}</b></article>; if(drop.kind==="voice") return <article className="evidence-voice"><b>Witness statement</b>{drop.mediaUrl && <audio controls src={drop.mediaUrl}/>}<small>{drop.content}</small></article>; return <article className="evidence-text"><span>TEXT</span><p>{drop.content}</p></article>; }
+function Evidence({drop}:{drop:Drop}) { if(drop.kind==="photo" && drop.mediaUrl?.startsWith("data:video/")) return <article className="evidence-photo"><video controls src={drop.mediaUrl}/><b>{drop.content}</b></article>; if(drop.kind==="photo" && drop.mediaUrl) return <article className="evidence-photo"><img alt={drop.content} src={drop.mediaUrl}/><b>{drop.content}</b></article>; if(drop.kind==="voice") return <article className="evidence-voice"><b>Witness statement</b>{drop.mediaUrl && <audio controls src={drop.mediaUrl}/>}<small>{drop.content}</small></article>; return <article className="evidence-text"><span>TEXT</span><p>{drop.content}</p></article>; }
 function summarize(drops:Drop[]) { const text=drops.filter((drop)=>drop.kind==="text").map((drop)=>drop.content).join(" "); return text || `${drops.length} piece${drops.length===1?"":"s"} of evidence filed. Add a text receipt to establish the current consensus.`; }
 function readBlob(blob:Blob) { return new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob);}); }

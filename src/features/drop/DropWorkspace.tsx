@@ -29,21 +29,12 @@ export function DropWorkspace() {
     finishDrop();
   }
 
-codex/ai-generation
-  function filesSelected(event: ChangeEvent<HTMLInputElement>) {
-    const files = [...(event.target.files ?? [])];
-    files.forEach((file) => {
-      const mediaType = file.type.startsWith("video/") ? "video" : "photo";
-      canonStore.addDrop("photo", `Uploaded ${mediaType}: ${file.name}`);
-    });
-
   async function filesSelected(event: ChangeEvent<HTMLInputElement>) {
     const files = [...(event.target.files ?? [])];
     await Promise.all(files.map(async (file) => {
       const mediaType = file.type.startsWith("video/") ? "video" : "photo";
       canonStore.addDrop("photo", `Uploaded ${mediaType}: ${file.name}`, await readFile(file));
     }));
- main
     if (files.length) finishDrop();
   }
 

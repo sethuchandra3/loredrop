@@ -12,6 +12,7 @@ import "./composer.css";
 import "./fullscreen.css";
 import "./case-file.css";
 import "./board.css";
+import "./media.css";
 
 function App() {
   return (
