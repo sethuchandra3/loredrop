@@ -3,7 +3,7 @@ import { useCanon, type Drop } from "../../data/store";
 
 const kindLabel: Record<Drop["kind"], string> = {
   text: "Text drop",
-  photo: "Photo file",
+  photo: "Photo/video file",
   voice: "Voice note",
 };
 
