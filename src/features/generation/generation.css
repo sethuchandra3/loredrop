@@ -19,6 +19,21 @@
   align-items: start;
 }
 
+.generation-context-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+  color: #385247;
+  background: #e8eee9;
+}
+
+.generation-context-summary a {
+  color: #6f452d;
+  font-weight: 700;
+}
+
 .generation-form,
 .generation-result {
   padding: 24px;
@@ -125,6 +140,12 @@
   justify-content: space-between;
 }
 
+.result-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .generation-actions button,
 .generation-result button {
   padding: 11px 16px;
@@ -205,4 +226,3 @@
     flex-direction: column;
   }
 }
-

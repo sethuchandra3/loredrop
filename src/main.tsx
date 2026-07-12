@@ -2,37 +2,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
 import { GenerationWorkspace } from "./features/generation/GenerationWorkspace";
+import { ListWorkspace } from "./features/list/ListWorkspace";
+import { CanvasWorkspace } from "./features/canvas/CanvasWorkspace";
+import { StudioWorkspace } from "./features/studio/StudioWorkspace";
 import "./styles.css";
-
-function ListRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">List</p>
-      <h1>List workspace</h1>
-      <p>Track lore drops, saved ideas, and lightweight reference notes.</p>
-    </section>
-  );
-}
-
-function CanvasRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">Canvas</p>
-      <h1>Canvas workspace</h1>
-      <p>Map relationships, scenes, and concepts in a visual planning surface.</p>
-    </section>
-  );
-}
-
-function StudioRoute() {
-  return (
-    <section className="route-panel">
-      <p className="eyebrow">Studio</p>
-      <h1>Studio workspace</h1>
-      <p>Shape drafts, polish details, and prepare finished material.</p>
-    </section>
-  );
-}
 
 function App() {
   return (
@@ -45,19 +18,20 @@ function App() {
             </span>
             <span>Loredrop</span>
           </div>
+          <p className="brand-tagline">A living atlas for imagined worlds.</p>
           <nav aria-label="Main navigation">
-            <NavLink to="/list">List</NavLink>
-            <NavLink to="/canvas">Canvas</NavLink>
-            <NavLink to="/studio">Studio</NavLink>
-            <NavLink to="/generate">Generate</NavLink>
+            <NavLink to="/list"><span aria-hidden="true">◫</span> Lore</NavLink>
+            <NavLink to="/canvas"><span aria-hidden="true">⌘</span> Canvas</NavLink>
+            <NavLink to="/generate"><span aria-hidden="true">✦</span> Generate</NavLink>
+            <NavLink to="/studio"><span aria-hidden="true">✎</span> Studio</NavLink>
           </nav>
         </aside>
         <main>
           <Routes>
             <Route path="/" element={<Navigate to="/list" replace />} />
-            <Route path="/list" element={<ListRoute />} />
-            <Route path="/canvas" element={<CanvasRoute />} />
-            <Route path="/studio" element={<StudioRoute />} />
+            <Route path="/list" element={<ListWorkspace />} />
+            <Route path="/canvas" element={<CanvasWorkspace />} />
+            <Route path="/studio" element={<StudioWorkspace />} />
             <Route path="/generate" element={<GenerationWorkspace />} />
           </Routes>
         </main>

@@ -1,4 +1,6 @@
 import { useRef, useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router";
+import { loreStore, useLoredropState } from "../../data/store";
 import { generateLore, GenerationApiError } from "./client";
 import { downloadMarkdown } from "./export";
 import {
@@ -17,6 +19,8 @@ const modeLabels: Record<GenerationMode, string> = {
 };
 
 export function GenerationWorkspace() {
+  const navigate = useNavigate();
+  const { lore, selectedLoreIds } = useLoredropState();
   const [mode, setMode] = useState<GenerationMode>("scene");
   const [instruction, setInstruction] = useState("");
   const [tone, setTone] = useState("Atmospheric and grounded");
@@ -25,6 +29,7 @@ export function GenerationWorkspace() {
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const activeRequest = useRef<AbortController | null>(null);
+  const selectedLore = lore.filter((entry) => selectedLoreIds.includes(entry.id));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,7 +42,13 @@ export function GenerationWorkspace() {
 
     try {
       const nextResult = await generateLore(
-        { mode, instruction, tone, length, lore: [] },
+        {
+          mode,
+          instruction,
+          tone,
+          length,
+          lore: selectedLore.map(({ id, title, body, tags }) => ({ id, title, body, tags })),
+        },
         { signal: controller.signal },
       );
       setResult(nextResult);
@@ -59,19 +70,26 @@ export function GenerationWorkspace() {
     activeRequest.current?.abort();
   }
 
+  function sendToStudio() {
+    if (!result) return;
+    loreStore.saveStudio(instruction.trim() || "Generated story", result.text);
+    navigate("/studio");
+  }
+
   return (
     <section className="generation-workspace" aria-labelledby="generation-title">
       <div className="generation-heading">
         <p className="eyebrow">AI generation</p>
         <h1 id="generation-title">Turn lore into a first draft.</h1>
-        <p>
-          Give the generator a clear direction. Selected lore from List and
-          Canvas will plug into this context in the next integration step.
-        </p>
+        <p>Give the generator a clear direction. Your selected lore becomes the creative guardrail.</p>
       </div>
 
       <div className="generation-layout">
         <form className="generation-form" onSubmit={handleSubmit}>
+          <div className="generation-context-summary">
+            <span><strong>{selectedLore.length}</strong> lore fragments attached</span>
+            <Link to="/list">Edit context</Link>
+          </div>
           <fieldset>
             <legend>What should Loredrop make?</legend>
             <div className="generation-modes">
@@ -159,21 +177,18 @@ export function GenerationWorkspace() {
               <h2>{result ? "Generated writing" : "Your result will appear here"}</h2>
             </div>
             {result && (
-              <button
-                className="button-secondary"
-                onClick={() => downloadMarkdown(instruction, result)}
-                type="button"
-              >
-                Export Markdown
-              </button>
+              <div className="result-actions">
+                <button className="button-secondary" onClick={() => void navigator.clipboard.writeText(result.text)} type="button">Copy</button>
+                <button className="button-secondary" onClick={() => downloadMarkdown(instruction, result)} type="button">Export</button>
+                <button onClick={sendToStudio} type="button">Use in Studio</button>
+              </div>
             )}
           </div>
           {result ? (
             <div className="generation-copy">{result.text}</div>
           ) : (
             <p className="generation-placeholder">
-              The API connection is ready for Jordan’s server endpoint. Your
-              previous successful draft will stay visible if a retry fails.
+              Choose a direction and generate a scene grounded in your selected lore.
             </p>
           )}
         </article>
@@ -181,4 +196,3 @@ export function GenerationWorkspace() {
     </section>
   );
 }
-
