@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { useCanon } from "../../data/store";
+import { Link } from "react-router";
+import { canonStore, useCanon } from "../../data/store";
 
 type Format = "newspaper" | "news";
 type Voice = "alloy" | "nova" | "onyx";
@@ -13,7 +14,7 @@ export function OutputsWorkspace() {
   const [mailQueued, setMailQueued] = useState(false);
   const lead = events[0];
   const narration = useMemo(
-    () => format === "newspaper"
+    () => !lead ? "" : format === "newspaper"
       ? `This is The Loredrop Daily. Today's banner story: ${lead.title}. Sources describe the mood as ${lead.mood}. In other news, ${events[1]?.title ?? "the group chat remains under investigation"}.`
       : `Breaking news. ${lead.title}. Sources close to the situation describe the mood as ${lead.mood}. When reached for comment, witnesses said: ${lead.quote}`,
     [format, lead, events],
@@ -43,6 +44,10 @@ export function OutputsWorkspace() {
     setMailQueued(true);
   }
 
+  if (!lead) {
+    return <section className="page-shell outputs-page outputs-empty"><div className="empty-edition-mark">LD</div><span className="scribble">THE PRESSES ARE WAITING</span><h1>There’s no front page without a story.</h1><p>Add one piece of lore and we’ll turn it into a newspaper, broadcast, and evidence trail—or load the demo edition and see the whole product in one click.</p><div className="empty-edition-actions"><Link to="/drop">Drop your first story</Link><button onClick={() => canonStore.loadDemo()} type="button">Load the demo edition</button></div><small>Nothing gets published publicly. You are always the editor of your group’s canon.</small></section>;
+  }
+
   return (
     <section className="page-shell outputs-page">
       <header className="page-title output-heading">
@@ -56,6 +61,7 @@ export function OutputsWorkspace() {
       <div className="output-stage">
         {format === "newspaper" ? <VintageNewspaper events={events}/> : <BreakingNews event={lead}/>}
         <aside className="output-controls">
+          <div className="edition-actions"><span>EDITION DESK</span><button onClick={() => window.print()} type="button">Print / Save PDF</button><button onClick={() => void navigator.clipboard.writeText(`${lead.title}\n\n${lead.quote}\n\nMade with Loredrop`)} type="button">Copy headline</button></div>
           {format === "newspaper" && <div className="mail-card"><span>PRINT EDITION</span><h2>Send it to the doorstep.</h2><p>Turn today’s canon into a folded keepsake with ink, paper, and unreasonable journalistic confidence.</p><button onClick={() => { setMailOpen(true); setMailQueued(false); }} type="button">Mail me a copy</button><small>Hackathon fulfillment preview · address is not transmitted</small></div>}
           <div className="voice-box"><span className="live-dot">● LIVE-ish</span><h2>Give it a voice.</h2><p>Have your canon read by the exact wrong level of seriousness.</p><div className="voice-pills"><button className={voice === "nova" ? "active" : ""} onClick={() => setVoice("nova")}>Nova<br/><small>dramatic bestie</small></button><button className={voice === "alloy" ? "active" : ""} onClick={() => setVoice("alloy")}>Alloy<br/><small>radio chaos</small></button><button className={voice === "onyx" ? "active" : ""} onClick={() => setVoice("onyx")}>Onyx<br/><small>movie trailer</small></button></div><button className="listen-button" onClick={() => void narrate()}>{speaking ? "Stop the broadcast" : "Read this edition"}</button><small className="ai-note">AI voice when configured · device voice fallback</small></div>
         </aside>

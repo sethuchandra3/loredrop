@@ -23,6 +23,25 @@ const initial: State = {
   bits: [],
 };
 
+const demoState: State = {
+  people,
+  drops: [
+    { id: "demo-chat", kind: "text", content: "maya: nobody let jordan order the mystery punch again\njordan: legally this is slander", createdAt: "2026-06-14T23:42:00Z", status: "extracted" },
+    { id: "demo-photo", kind: "photo", content: "Blurry 2:13am diner evidence", createdAt: "2026-06-15T02:13:00Z", status: "extracted" },
+    { id: "demo-voice", kind: "voice", content: "Witness statement: the kayak was absolutely not my fault", createdAt: "2026-05-22T18:30:00Z", status: "extracted" },
+  ],
+  events: [
+    { id: "demo-punch", title: "The Mystery Punch Incident", date: "June 14", place: "Maya’s roof → Moonlight Diner", mood: "confidently doomed", quote: "Legally this is slander.", participantIds: ["maya", "jordan", "stuti", "sethu"], dropIds: ["demo-chat", "demo-photo"] },
+    { id: "demo-kayak", title: "We Don’t Talk About the Kayak", date: "May 22", place: "Lake Tahoe-ish", mood: "wet and disputed", quote: "The current had motives.", participantIds: ["jordan", "miriam", "sethu"], dropIds: ["demo-voice"], disputed: true },
+    { id: "demo-brunch", title: "The Accidental Four-City Brunch", date: "April 03", place: "FaceTime / four time zones", mood: "surprisingly tender", quote: "Wait, is it breakfast for any of us?", participantIds: ["maya", "jordan", "stuti", "miriam"], dropIds: [] },
+  ],
+  connections: [
+    { id: "demo-c1", sourceId: "maya", targetId: "jordan", label: "co-conspirators", weight: 11 },
+    { id: "demo-c2", sourceId: "jordan", targetId: "stuti", label: "bad idea feedback loop", weight: 9 },
+  ],
+  bits: ["we don’t talk about the kayak", "legally this is slander", "one more place"],
+};
+
 let state = load();
 const listeners = new Set<() => void>();
 function load(): State { try { const raw = localStorage.getItem(KEY); return raw ? { ...initial, ...(JSON.parse(raw) as State) } : initial; } catch { return initial; } }
@@ -43,6 +62,7 @@ export const canonStore = {
   },
   renamePerson(id: string, name: string) { save({ ...state, people: state.people.map((person) => person.id === id ? { ...person, name: name.trim() || person.name } : person) }); },
   toggleDisputed(id: string) { save({ ...state, events: state.events.map((event) => event.id === id ? { ...event, disputed: !event.disputed } : event) }); },
+  loadDemo() { save(demoState); },
   reset() { localStorage.removeItem(KEY); state = initial; listeners.forEach((listener) => listener()); },
 };
 
