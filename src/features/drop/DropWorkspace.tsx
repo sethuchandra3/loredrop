@@ -1,9 +1,9 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
-import { Link } from "react-router";
-import { canonStore, useCanon, type DropKind } from "../../data/store";
+import { useNavigate } from "react-router";
+import { canonStore, type DropKind } from "../../data/store";
 
 export function DropWorkspace() {
-  const { drops, events } = useCanon();
+  const navigate = useNavigate();
   const [composerOpen, setComposerOpen] = useState(false);
   const [kind, setKind] = useState<DropKind | null>(null);
   const [text, setText] = useState("");
@@ -18,6 +18,7 @@ export function DropWorkspace() {
     setKind(null);
     setCelebrate(true);
     window.setTimeout(() => setCelebrate(false), 1600);
+    navigate("/canvas");
   }
 
   function submit(event: FormEvent) {
@@ -52,7 +53,7 @@ export function DropWorkspace() {
     const recorder = recorderRef.current;
     if (!recorder) return;
     recorder.onstop = () => {
-      canonStore.addDrop("voice", "Recorded voice note — ready for canon review.");
+      canonStore.addDrop("voice", "Recorded voice note — ready for tea review.");
       streamRef.current?.getTracks().forEach((track) => track.stop());
       recorderRef.current = null;
       streamRef.current = null;
@@ -76,7 +77,6 @@ export function DropWorkspace() {
       <header className="drop-question">
         <span className="doodle">LOREDROP</span>
         <h1>What’s the lore?</h1>
-        <p>Drop the evidence. Keep the context. You decide what becomes canon.</p>
       </header>
 
       <button
@@ -109,7 +109,7 @@ export function DropWorkspace() {
               <form onSubmit={submit}>
                 <label htmlFor="lore-text">{kind === "voice" ? "Voice transcription fallback" : "What happened?"}</label>
                 <textarea autoFocus id="lore-text" onChange={(event) => setText(event.target.value)} placeholder="Paste the group chat evidence here…" rows={7} value={text}/>
-                <div className="composer-actions"><button onClick={() => setKind(null)} type="button">Back</button><button className="submit-drop" type="submit">Add to canon</button></div>
+                <div className="composer-actions"><button onClick={() => setKind(null)} type="button">Back</button><button className="submit-drop" type="submit">Add to tea</button></div>
               </form>
             )}
 
@@ -123,10 +123,6 @@ export function DropWorkspace() {
         </div>
       )}
 
-      <section className="drop-summary">
-        <div className="summary-counts"><span><b>{drops.length}</b> drops</span><span><b>{events.length}</b> events</span><span><b>3</b> running bits</span></div>
-        <div className="recent-minimal"><div className="section-label">RECENT CANON</div>{events.slice(0,3).map((event) => <Link key={event.id} to="/canon"><div><b>{event.title}</b><small>{event.date} · {event.mood}</small></div><span>View</span></Link>)}</div>
-      </section>
     </section>
   );
 }
