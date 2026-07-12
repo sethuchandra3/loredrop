@@ -1,7 +1,15 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { canonStore, useCanon, type Drop } from "../../data/store";
 
+codex/ai-generation
+const kindLabel: Record<Drop["kind"], string> = {
+  text: "Text drop",
+  photo: "Photo/video file",
+  voice: "Voice note",
+};
+
 const labels: Record<Drop["kind"], string> = { text: "Text receipts", photo: "Photo/video receipts", voice: "Voice receipts" };
+main
 
 export function CanvasWorkspace() {
   const { drops, events } = useCanon();
