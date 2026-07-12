@@ -4,7 +4,14 @@ import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
 import { CanvasWorkspace } from "./features/canvas/CanvasWorkspace";
 import { DropWorkspace } from "./features/drop/DropWorkspace";
 import { OutputsWorkspace } from "./features/outputs/OutputsWorkspace";
+import { WebWorkspace } from "./features/web/WebWorkspace";
 import "./styles.css";
+import "./web.css";
+import "./layout.css";
+import "./composer.css";
+import "./fullscreen.css";
+import "./case-file.css";
+import "./board.css";
 
 function App() {
   return (
@@ -25,7 +32,7 @@ function App() {
             <Route path="/canvas" element={<CanvasWorkspace />} />
             <Route path="/canon" element={<Navigate to="/canvas" replace />} />
             <Route path="/outputs" element={<OutputsWorkspace />} />
-            <Route path="/web" element={<CanvasWorkspace />} />
+            <Route path="/web" element={<WebWorkspace />} />
             <Route path="*" element={<Navigate to="/drop" replace />} />
           </Routes>
         </main>

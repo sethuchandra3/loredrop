@@ -1,0 +1,6 @@
+.canvas-text-composer{display:grid;gap:10px;padding:18px;border:3px solid var(--ink);background:#fff;box-shadow:5px 5px 0 var(--ink)}
+.canvas-text-composer label{font-weight:900}
+.canvas-text-composer h2{margin:0 0 6px;font-family:"Fraunces",serif;font-size:2rem}.canvas-text-composer label span{color:#756b73;font-size:.65rem;text-transform:uppercase}.canvas-text-composer input,.canvas-text-composer textarea{width:100%;padding:13px;resize:vertical;border:3px solid var(--ink);background:#fff;font-family:"DM Mono",monospace}
+.canvas-text-composer div{display:flex;gap:10px;justify-content:flex-end}
+.canvas-text-composer button{padding:9px 13px;border:2px solid var(--ink);background:#fff;font-weight:800;cursor:pointer}
+.canvas-text-composer button[type="submit"]{background:var(--yellow)}
