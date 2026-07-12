@@ -10,21 +10,14 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-shell">
-        <aside className="sidebar">
-          <div className="brand">
-            <span className="brand-mark" aria-hidden="true">
-              L
-            </span>
-            <span>Loredrop</span>
-          </div>
-          <p className="brand-tagline">your group chat,<br/>but make it tea ✦</p>
+        <header className="top-island">
           <nav aria-label="Main navigation">
-            <NavLink to="/drop"><span aria-hidden="true">↘</span> Drop</NavLink>
-            <NavLink to="/canvas"><span aria-hidden="true">✓</span> Canvas</NavLink>
-            <NavLink to="/outputs"><span aria-hidden="true">✦</span> Make stuff</NavLink>
-            <NavLink to="/web"><span aria-hidden="true">⌘</span> The web</NavLink>
+            <NavLink to="/drop">Drop</NavLink>
+            <NavLink to="/canvas">Canvas</NavLink>
+            <NavLink to="/outputs">Make stuff</NavLink>
+            <NavLink to="/web">The web</NavLink>
           </nav>
-        </aside>
+        </header>
         <main>
           <Routes>
             <Route path="/" element={<Navigate to="/drop" replace />} />
