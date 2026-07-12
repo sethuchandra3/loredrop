@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
+import { GenerationWorkspace } from "./features/generation/GenerationWorkspace";
 import "./styles.css";
 
 function ListRoute() {
@@ -48,6 +49,7 @@ function App() {
             <NavLink to="/list">List</NavLink>
             <NavLink to="/canvas">Canvas</NavLink>
             <NavLink to="/studio">Studio</NavLink>
+            <NavLink to="/generate">Generate</NavLink>
           </nav>
         </aside>
         <main>
@@ -56,6 +58,7 @@ function App() {
             <Route path="/list" element={<ListRoute />} />
             <Route path="/canvas" element={<CanvasRoute />} />
             <Route path="/studio" element={<StudioRoute />} />
+            <Route path="/generate" element={<GenerationWorkspace />} />
           </Routes>
         </main>
       </div>
