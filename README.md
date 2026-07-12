@@ -2,6 +2,12 @@
 
 Loredrop turns group-chat chaos into canon. Drop screenshots, photos, voice-note transcripts, and half-remembered context; confirm what the system found; then turn the friend-group graph into artifacts people actually want to send back to the chat.
 
+## Live web app
+
+[Open Loredrop](https://loredrop-canon.stuti696708.chatgpt.site)
+
+The hosted app is deployed from this repository's verified production build. Publish a new Sites version after merging product changes to keep the live app aligned with the repository.
+
 ## Run the hackathon MVP
 
 ```bash
