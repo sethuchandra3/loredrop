@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from "react-router";
 import { CanvasWorkspace } from "./features/canvas/CanvasWorkspace";
 import { DropWorkspace } from "./features/drop/DropWorkspace";
-import { CanonWorkspace } from "./features/canon/CanonWorkspace";
 import { OutputsWorkspace } from "./features/outputs/OutputsWorkspace";
 import "./styles.css";
 
@@ -18,10 +17,10 @@ function App() {
             </span>
             <span>Loredrop</span>
           </div>
-          <p className="brand-tagline">your group chat,<br/>but make it canon ✦</p>
+          <p className="brand-tagline">your group chat,<br/>but make it tea ✦</p>
           <nav aria-label="Main navigation">
             <NavLink to="/drop"><span aria-hidden="true">↘</span> Drop</NavLink>
-            <NavLink to="/canon"><span aria-hidden="true">✓</span> Canon</NavLink>
+            <NavLink to="/canvas"><span aria-hidden="true">✓</span> Canvas</NavLink>
             <NavLink to="/outputs"><span aria-hidden="true">✦</span> Make stuff</NavLink>
             <NavLink to="/web"><span aria-hidden="true">⌘</span> The web</NavLink>
           </nav>
@@ -30,7 +29,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/drop" replace />} />
             <Route path="/drop" element={<DropWorkspace />} />
-            <Route path="/canon" element={<CanonWorkspace />} />
+            <Route path="/canvas" element={<CanvasWorkspace />} />
+            <Route path="/canon" element={<Navigate to="/canvas" replace />} />
             <Route path="/outputs" element={<OutputsWorkspace />} />
             <Route path="/web" element={<CanvasWorkspace />} />
             <Route path="*" element={<Navigate to="/drop" replace />} />
