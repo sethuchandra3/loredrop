@@ -1,7 +1,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { canonStore, useCanon, type Drop } from "../../data/store";
 
-const labels: Record<Drop["kind"], string> = { text: "Text receipts", photo: "Photo receipts", voice: "Voice receipts" };
+const labels: Record<Drop["kind"], string> = { text: "Text receipts", photo: "Photo/video receipts", voice: "Voice receipts" };
 
 export function CanvasWorkspace() {
   const { drops, events } = useCanon();

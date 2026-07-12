@@ -31,7 +31,10 @@ export function DropWorkspace() {
 
   async function filesSelected(event: ChangeEvent<HTMLInputElement>) {
     const files = [...(event.target.files ?? [])];
-    await Promise.all(files.map(async (file) => canonStore.addDrop("photo", file.name, await readFile(file))));
+    await Promise.all(files.map(async (file) => {
+      const mediaType = file.type.startsWith("video/") ? "video" : "photo";
+      canonStore.addDrop("photo", `Uploaded ${mediaType}: ${file.name}`, await readFile(file));
+    }));
     if (files.length) finishDrop();
   }
 
@@ -99,9 +102,9 @@ export function DropWorkspace() {
 
             {!kind && (
               <div className="drop-methods">
-                <button onClick={() => setKind("text")} type="button"><b>💬 Text Receipt</b><span>Paste a chat or type what happened.</span></button>
-                <button onClick={() => { setKind("photo"); fileRef.current?.click(); }} type="button"><b>📸 Evidence</b><span>Add screenshots or camera-roll evidence.</span></button>
-                <button onClick={() => { setKind("voice"); void startRecording(); }} type="button"><b>🎙 Witness Statement</b><span>Record the version you remember.</span></button>
+                <button onClick={() => setKind("text")} type="button"><b>Text</b><span>Paste a chat or type what happened.</span></button>
+                <button onClick={() => { setKind("photo"); fileRef.current?.click(); }} type="button"><b>Photos/Videos</b><span>Add screenshots, photos, or video evidence.</span></button>
+                <button onClick={() => { setKind("voice"); void startRecording(); }} type="button"><b>Voice</b><span>Record the version you remember.</span></button>
               </div>
             )}
 
@@ -117,7 +120,7 @@ export function DropWorkspace() {
               <div className="voice-recorder"><div className="recording-line"><i/><span>Recording voice note</span></div><div className="waveform" aria-hidden="true">||||||||||||||||||||</div><button onClick={stopRecording} type="button">Stop and add</button></div>
             )}
 
-            <input accept="image/*" hidden multiple onChange={filesSelected} ref={fileRef} type="file"/>
+            <input accept="image/*,video/*" hidden multiple onChange={filesSelected} ref={fileRef} type="file"/>
             <p className="composer-privacy">Closed group by default. Everything stays editable.</p>
           </section>
         </div>
